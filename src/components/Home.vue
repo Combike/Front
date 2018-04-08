@@ -1,9 +1,29 @@
 <template>
   <div>
-    <h1>Combike</h1>
-    <button @click="">Usar GPS</button>
-    <router-link tag='button' :to="{name: 'AddRoute'}">Cadastrar rota</router-link>
-    <div class="google-map" :id="mapName"></div>
+    <v-toolbar color="orange">
+      <v-toolbar-side-icon></v-toolbar-side-icon>
+    </v-toolbar>
+
+    <v-container pa-0>
+      <div class="field-fixed">
+        <v-text-field solo label="Qual o seu destino?"></v-text-field>
+      </div>
+      <v-btn
+        fab dark small fixed bottom left
+        color="orange"
+        tag='button'
+        :to="{name: 'AddRoute'}"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
+      <v-btn
+        fab light small fixed bottom right
+        color="orange"
+      >
+        <v-icon>my_location</v-icon>
+      </v-btn>
+      <div class="google-map" :id="mapName"></div>
+    </v-container>
   </div>
 </template>
 
@@ -63,6 +83,13 @@ html, body
 
 .google-map
   width: 100%
-  height: 300px
+  height: calc(100vh - 56px)
   margin: 0
+.field-fixed
+  position: fixed
+  width: calc(100% - 30px)
+  top: 71px
+  left: 15px
+  background: white
+  z-index: 99
 </style>

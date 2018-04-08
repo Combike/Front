@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <v-toolbar color="orange">
-      <v-toolbar-side-icon></v-toolbar-side-icon>
-    </v-toolbar>
-
+  <v-app id="inspire">
+    <Header />
     <v-container pa-0>
       <div class="field-fixed">
         <v-text-field solo label="Qual o seu destino?"></v-text-field>
@@ -32,10 +29,12 @@
       </div>
       <div class="google-map" :id="mapId"></div>
     </v-container>
-  </div>
+  </v-app>
 </template>
 
 <script>
+import Header from '@/components/Header'
+
 export default {
   props: ['name'],
   data: function () {
@@ -49,7 +48,12 @@ export default {
         [{lat: -3.7394102, lng: -38.5271261}, {lat: -3.7413959, lng: -38.5434447}],
         [{lat: -3.747991, lng: -38.5355487}, {lat: -3.7513309, lng: -38.5200137}],
       ],
+      mapName: this.name + "-map",
+      drawer: null,
     }
+  },
+  components: {
+    Header,
   },
   mounted: function () {
     // Sorry
@@ -142,5 +146,5 @@ html, body
   top: 71px
   left: 15px
   background: white
-  z-index: 99
+  z-index: 5
 </style>

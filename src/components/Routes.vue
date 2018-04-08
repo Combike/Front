@@ -8,25 +8,24 @@
     >
       <v-layout row wrap>
         <v-flex xs12>
-          <div class="after">
-            <v-card>
-              <v-card-media src="https://maps.googleapis.com/maps/api/staticmap?center=Berkeley,CA&zoom=14&size=800x130&key=AIzaSyAScck9X91OxwM0wMi6kZ7t2Ni_OWupmc8" height="130px">
-                <v-container fill-height fluid>
-                  <v-layout fill-height>
-                    <v-flex xs12 align-end flexbox>
-                      <v-list-tile color="white">
-                        <v-list-tile-action>
-                          <v-icon color="white">place</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                          <v-list-tile-title class="title" v-text="'item.title'"></v-list-tile-title>
-                        </v-list-tile-content>
-                      </v-list-tile>
-                    </v-flex>
-                  </v-layout>
-                </v-container>
-              </v-card-media>
-            </v-card>
+          <div>
+            <v-container
+              fluid
+              style="min-height: 0;"
+              grid-list-lg
+            >
+              <v-layout row wrap>
+                <v-flex v-for="route in routes" class="dark" xs12>
+                  <v-card color="blue-grey" class="white--text">
+                  <v-card-media :src="'https://maps.googleapis.com/maps/api/staticmap?center=' + route.cordinates[0].lat + ',' + route.cordinates[0].lng + '&zoom=14&size=800x130&key=AIzaSyAScck9X91OxwM0wMi6kZ7t2Ni_OWupmc8'">
+                    <v-card-title  primary-title>
+                      <div class="headline black--text">{{ route.name }}</div>
+                    </v-card-title>
+                  </v-card-media>
+                  </v-card>
+                </v-flex>
+              </v-layout>
+            </v-container>
           </div>
         </v-flex>
       </v-layout>
@@ -36,11 +35,67 @@
 
 <script>
 import Header from '@/components/Header'
+import axios from 'axios';
 
 export default {
   components: {
     Header,
-  }
+  },
+  data() {
+    return {
+      routes: [
+        {
+          "id": 1,
+          "name": "Parque do Cocó",
+          "cordinates": [
+            {
+              "lat": "-3.747991",
+              "lng": "-38.5355487"
+            },
+            {
+              "lat": "-3.7513309",
+              "lng": "-38.5200137"
+            }
+          ],
+          "working_days": [
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00"
+          ],
+          "bookmark": false
+        },
+        {
+          "id": 2,
+          "name": "Praia de Iracema",
+          "cordinates": [
+            {
+              "lat": "-3.747991",
+              "lng": "-38.5355487"
+            },
+            {
+              "lat": "-3.7513309",
+              "lng": "-38.5200137"
+            }
+          ],
+          "working_days": [
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00",
+            "08:00"
+          ],
+          "bookmark": false
+        }
+      ]
+    }
+  },
+
 }
 </script>
 
@@ -54,7 +109,7 @@ export default {
     height: 100%
     top: 0
     left: 0
-    background: rgba(0, 0, 0, .5)
+
 .card__media__content
   z-index: 5
 </style>

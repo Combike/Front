@@ -54,10 +54,6 @@ export default {
       map: null,
       loading: false,
       hasSelectedRoute: false,
-      routes: [
-        [{lat: -3.7394102, lng: -38.5271261}, {lat: -3.7413959, lng: -38.5434447}],
-        [{lat: -3.747991, lng: -38.5355487}, {lat: -3.7513309, lng: -38.5200137}],
-      ],
       mapName: this.name + "-map",
       drawer: null,
     }
@@ -66,12 +62,13 @@ export default {
     Header,
   },
   mounted: function () {
-    // Sorry
-    setTimeout(() => {
-      this.loadMap()
-      this.loadRoutes()
-      this.loadRegisterForm()
-    }, 500)
+    apiRequestService.get('routes')
+      .then(response => {
+        this.routes = response.routes
+        this.loadMap()
+        this.loadRoutes()
+        this.loadRegisterForm()
+      })
   },
   methods: {
     loadRegisterForm: function () {
@@ -133,8 +130,8 @@ export default {
       })
     },
     saveRoute () {
-      // TODO: Request
-      apiRequestService.get('test')
+      apiRequestService.post('routes')
+        .then(() => this.$router.push({name: 'Routes'}))
     },
     cancel() {
       this.loadMap();

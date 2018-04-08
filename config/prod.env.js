@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  apiUrl: "'http://localhost:8080'",
+  apiUrl: "'http://uberhack.thiagofalencar.com/api'",
 }

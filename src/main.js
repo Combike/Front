@@ -10,17 +10,7 @@ Vue.config.productionTip = false
 
 import colors from 'vuetify/es5/util/colors'
 
-Vue.use(Vuetify, {
-  theme: {
-    primary: "#FF9800",
-    secondary: "#F57C00",
-    accent: "#F57C00",
-    error: "#f44336",
-    warning: "#ffeb3b",
-    info: "#2196f3",
-    success: "#4caf50"
-  }
-})
+Vue.use(Vuetify)
 
 /* eslint-disable no-new */
 new Vue({

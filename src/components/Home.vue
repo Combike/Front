@@ -2,7 +2,7 @@
   <v-app id="inspire">
     <Header />
     <v-container pa-0>
-      <div class="form" v-show="showRegisterForm">
+      <div :class="hasSelectedRoute ? 'disabled' : ''"  class="form" v-show="showRegisterForm">
         <div class="input-group__input">
           <input ref="from" type="text" placeholder="De">
         </div>
@@ -10,7 +10,15 @@
           <input ref="to" type="text" placeholder="Para">
         </div>
         <button class="btn" @click="cancel()">Cancelar</button>
-        <button :color="primary" class="btn" @click="showRoute();">Ver rota</button>
+        <button
+          v-if="hasSelectedRoute"
+          color="success"
+          class="btn"
+          @click="saveRoute()"
+          :loading="loading"
+          :disabled="loading"
+        >Salvar</button>
+        <button v-else="hasSelectedRoute" color="success" class="btn" @click="showRoute()">Ver rota</button>
       </div>
       <v-btn
         fab light small fixed bottom right
@@ -32,6 +40,7 @@
 </template>
 
 <script>
+import apiRequestService from '@/services/api-request-service'
 import Header from '@/components/Header'
 
 export default {
@@ -43,6 +52,8 @@ export default {
       directionsService: null,
       geocoder: null,
       map: null,
+      loading: false,
+      hasSelectedRoute: false,
       routes: [
         [{lat: -3.7394102, lng: -38.5271261}, {lat: -3.7413959, lng: -38.5434447}],
         [{lat: -3.747991, lng: -38.5355487}, {lat: -3.7513309, lng: -38.5200137}],
@@ -98,6 +109,7 @@ export default {
               from,
               to
             ])
+            this.hasSelectedRoute = true
           })
         }
       });
@@ -114,19 +126,21 @@ export default {
           let a = directionsRenderer.setDirections(response)
           let b =  directionsRenderer.setMap(this.map)
           google.maps.event.addListener(directionsRenderer, () => console.log(111))
-          console.log(directionsRenderer)
-          this.showAditionalFields = true
         } else {
           // TODO: Melhorar o tratamento do erro
           alert('Não foi possível encontrar a rota')
         }
       })
     },
+    saveRoute () {
+      // TODO: Request
+      apiRequestService.get('test')
+    },
     cancel() {
       this.loadMap();
       this.loadRoutes();
       this.showRegisterForm = false
-      this.showAditionalFields = false
+      this.hasSelectedRoute = false
       this.$refs.from.value = ''
       this.$refs.to.value = ''
     },
@@ -151,6 +165,12 @@ html, body
   padding: 20px
   input
     width: 100%
+    padding: 8px
+  .input-group__input
+    height: 40px
+    border-bottom: 1px solid
+  .btn
+      margin-top: 30px
 .field-fixed
   position: fixed
   width: calc(100% - 30px)

@@ -3,19 +3,24 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-// import * as VueGoogleMaps from 'vue2-google-maps'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
 Vue.config.productionTip = false
 
-// Vue.use(VueGoogleMaps, {
-//   load: {
-//     key: 'AIzaSyAScck9X91OxwM0wMi6kZ7t2Ni_OWupmc8',
-//     libraries: 'places', // This is required if you use the Autocomplete plugin
-//     // OR: libraries: 'places,drawing'
-//     // OR: libraries: 'places,drawing,visualization'
-//     // (as you require)
-//   }
-// })
+import colors from 'vuetify/es5/util/colors'
+
+Vue.use(Vuetify, {
+  theme: {
+    primary: "#FF9800",
+    secondary: "#F57C00",
+    accent: "#F57C00",
+    error: "#f44336",
+    warning: "#ffeb3b",
+    info: "#2196f3",
+    success: "#4caf50"
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

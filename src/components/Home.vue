@@ -22,57 +22,108 @@
       >
         <v-icon>my_location</v-icon>
       </v-btn>
-      <div class="google-map" :id="mapName"></div>
+      <button @click="">Usar GPS</button>
+      <button @click="loadMap();showRegisterForm = true">Cadastrar rota</button>
+      <div v-show="showRegisterForm">
+        <input ref="from" type="text" placeholder="De">
+        <input ref="to" type="text" placeholder="Para">
+        <button @click="showRoute();">Ver rota</button>
+        <button @click="loadMap();loadRoutes();showRegisterForm = false">Cancelar</button>
+      </div>
+      <div class="google-map" :id="mapId"></div>
     </v-container>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'google-map',
   props: ['name'],
   data: function () {
     return {
-      mapName: this.name + "-map",
+      mapId: 'map',
+      showRegisterForm: false,
+      directionsService: null,
+      geocoder: null,
+      map: null,
+      routes: [
+        [{lat: -3.7394102, lng: -38.5271261}, {lat: -3.7413959, lng: -38.5434447}],
+        [{lat: -3.747991, lng: -38.5355487}, {lat: -3.7513309, lng: -38.5200137}],
+      ],
     }
   },
   mounted: function () {
     // Sorry
     setTimeout(() => {
-      const element = document.getElementById(this.mapName)
+      this.loadMap()
+      this.loadRoutes()
+      this.loadRegisterForm()
+    }, 500)
+  },
+  methods: {
+    loadRegisterForm: function () {
+      let from = new google.maps.places.Autocomplete(this.$refs.from)
+      let to = new google.maps.places.Autocomplete(this.$refs.to)
+    },
+    loadMap: function () {
       const options = {
         zoom: 14,
         center: new google.maps.LatLng(-3.7394102,-38.5271261)
       }
-      const map = new google.maps.Map(element, options)
-
-      let geocoder = new google.maps.Geocoder()
-      let directionsService = new google.maps.DirectionsService()
-
-      const routes = [
-        [{lat: -3.7394102, lng: -38.5271261}, {lat: -3.7413959, lng: -38.5434447}],
-        [{lat: -3.747991, lng: -38.5355487}, {lat: -3.7513309, lng: -38.5200137}],
-      ]
-      routes.forEach(route => {
-        let request = {
-          origin: route[0],
-          destination: route[1],
-          travelMode: google.maps.DirectionsTravelMode.BICYCLING
-        }
-        directionsService.route(request, (response, status) => {
-          if (status == google.maps.DirectionsStatus.OK) {
-            const directionsRenderer = new google.maps.DirectionsRenderer()
-            directionsRenderer.setDirections(response)
-            directionsRenderer.setMap(map)
+      this.map = new google.maps.Map(this.getMapElement(), options)
+      this.directionsService = new google.maps.DirectionsService()
+      this.geocoder = new google.maps.Geocoder()
+    },
+    loadRoutes: function () {
+      this.routes.forEach(this.addRoute)
+    },
+    showRoute: function () {
+      let to = {}
+      let from = {}
+      this.geocoder.geocode( { address: this.$refs.from.value }, (fromResults, status) => {
+        if (status == google.maps.GeocoderStatus.OK) {
+          from = {
+            lat: fromResults[0].geometry.location.lat(),
+            lng: fromResults[0].geometry.location.lng()
           }
-        })
+          this.geocoder.geocode( { address: this.$refs.to.value }, (toResults, status) => {
+            to = {
+              lat: toResults[0].geometry.location.lat(),
+              lng: toResults[0].geometry.location.lng()
+            }
+            this.addRoute([
+              from,
+              to
+            ])
+          })
+        }
+      });
+    },
+    addRoute (route) {
+      let request = {
+        origin: route[0],
+        destination: route[1],
+        travelMode: google.maps.DirectionsTravelMode.BICYCLING
+      }
+      this.directionsService.route(request, (response, status) => {
+        if (status == google.maps.DirectionsStatus.OK) {
+          const directionsRenderer = new google.maps.DirectionsRenderer()
+          let a = directionsRenderer.setDirections(response)
+          let b =  directionsRenderer.setMap(this.map)
+          google.maps.event.addListener(directionsRenderer, () => console.log(111))
+          console.log(directionsRenderer)
+          // this.showAditionalFields
+        } else {
+          // TODO: Melhorar o tratamento do erro
+          alert('Não foi possível encontrar a rota')
+        }
       })
-    }, 500)
-    // const input = document.getElementById('route_from')
-    // const autocomplete = new google.maps.places.Autocomplete(input)
-  },
-  methods: {}
+    },
+    getMapElement: function () {
+      return document.getElementById(this.mapId)
+    },
+  }
 }
+
 </script>
 
 <style lang="sass">

@@ -12,7 +12,6 @@
   export default {
     methods: {
       saveRoute: function () {
-        console.log(123)
         axios.post('/route')
           .then((response) => {
             console.log(response);

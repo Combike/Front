@@ -2,31 +2,30 @@
   <v-app id="inspire">
     <Header />
     <v-container pa-0>
-      <div class="field-fixed">
-        <v-text-field solo label="Qual o seu destino?"></v-text-field>
+      <div class="form" v-show="showRegisterForm">
+        <div class="input-group__input">
+          <input ref="from" type="text" placeholder="De">
+        </div>
+        <div class="input-group__input">
+          <input ref="to" type="text" placeholder="Para">
+        </div>
+        <button class="btn" @click="cancel()">Cancelar</button>
+        <button :color="primary" class="btn" @click="showRoute();">Ver rota</button>
       </div>
-      <v-btn
-        fab dark small fixed bottom left
-        color="orange"
-        tag='button'
-        :to="{name: 'AddRoute'}"
-      >
-        <v-icon>add</v-icon>
-      </v-btn>
       <v-btn
         fab light small fixed bottom right
         color="orange"
       >
         <v-icon>my_location</v-icon>
       </v-btn>
-      <button @click="">Usar GPS</button>
-      <button @click="loadMap();showRegisterForm = true">Cadastrar rota</button>
-      <div v-show="showRegisterForm">
-        <input ref="from" type="text" placeholder="De">
-        <input ref="to" type="text" placeholder="Para">
-        <button @click="showRoute();">Ver rota</button>
-        <button @click="loadMap();loadRoutes();showRegisterForm = false">Cancelar</button>
-      </div>
+      <v-btn
+        fab dark small fixed bottom left
+        color="orange"
+        tag='button'
+        @click="loadMap();showRegisterForm = true"
+      >
+        <v-icon>add</v-icon>
+      </v-btn>
       <div class="google-map" :id="mapId"></div>
     </v-container>
   </v-app>
@@ -115,12 +114,20 @@ export default {
           let b =  directionsRenderer.setMap(this.map)
           google.maps.event.addListener(directionsRenderer, () => console.log(111))
           console.log(directionsRenderer)
-          // this.showAditionalFields
+          this.showAditionalFields = true
         } else {
           // TODO: Melhorar o tratamento do erro
           alert('Não foi possível encontrar a rota')
         }
       })
+    },
+    cancel() {
+      this.loadMap();
+      this.loadRoutes();
+      this.showRegisterForm = false
+      this.showAditionalFields = false
+      this.$refs.from.value = ''
+      this.$refs.to.value = ''
     },
     getMapElement: function () {
       return document.getElementById(this.mapId)
@@ -135,11 +142,14 @@ html, body
   height: 100%
   margin: 0
   padding: 0
-
 .google-map
   width: 100%
   height: calc(100vh - 56px)
   margin: 0
+.form
+  padding: 20px
+  input
+    width: 100%
 .field-fixed
   position: fixed
   width: calc(100% - 30px)

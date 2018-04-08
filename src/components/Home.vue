@@ -70,7 +70,8 @@ export default {
     loadMap: function () {
       const options = {
         zoom: 14,
-        center: new google.maps.LatLng(-3.7394102,-38.5271261)
+        center: new google.maps.LatLng(-3.7394102,-38.5271261),
+        disableDefaultUI: true,
       }
       this.map = new google.maps.Map(this.getMapElement(), options)
       this.directionsService = new google.maps.DirectionsService()
